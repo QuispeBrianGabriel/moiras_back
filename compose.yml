@@ -1,0 +1,15 @@
+services:
+  backend:
+    container_name: moiras_back_dev
+    image: moiras_back_dev
+    stdin_open: true
+    tty: true
+    user: '${CURRENT_UID}:${CURRENT_GID}'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - '5173:5173'
+      - '4173:4173'
+    volumes:
+      - .:/app
