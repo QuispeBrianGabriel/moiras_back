@@ -11,6 +11,8 @@ services:
     ports:
       - '8080:8080'
     environment:
+      - GIT_SSH_COMMAND=ssh -o IdentitiesOnly=yes -F /dev/null
+      - GIT_CONFIG_GLOBAL=/gitconfig-host
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/moiras
       - SPRING_DATASOURCE_USERNAME=moiras
       - SPRING_DATASOURCE_PASSWORD=moiras
@@ -20,6 +22,8 @@ services:
     volumes:
       - .:/app
       - gradle_cache:/gradle-cache
+      - ~/.gitconfig:/gitconfig-host:ro
+      - ~/.ssh:/home/node/.ssh:ro
 
   db:
     image: postgres:17-alpine

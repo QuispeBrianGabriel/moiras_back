@@ -3,7 +3,7 @@ import java.util.Properties
 tasks.register("version") {
 
     group = "versioning"
-    description = "Incrementa la versión. Uso: ./gradlew version -Ptype=patch|minor|major [-Pcommit]"
+    description = "Incrementa la versión. Uso: ./gradlew version -Ptype=patch|minor|major"
 
     doLast {
 
@@ -66,15 +66,26 @@ tasks.register("version") {
         println("Versión: $current → $next")
         println()
 
-        exec {
-            commandLine("git", "add", "gradle.properties")
+        fun runCommand(vararg command: String) {
+            val process = ProcessBuilder(*command)
+                .directory(file.parentFile)
+                .redirectErrorStream(true)
+                .start()
+
+            val output = process.inputStream.bufferedReader().readText()
+            val exitCode = process.waitFor()
+
+            if (exitCode != 0) {
+                throw GradleException(
+                    "Comando falló (${command.joinToString(" ")}):\n$output"
+                )
+            }
         }
 
-        exec {
-            commandLine("git", "commit", "-m", "chore: bump version to $next")
-        }
+        runCommand("git", "add", "gradle.properties")
+        runCommand("git", "commit", "-m", "Version $next 🎉")
 
-        println("✅ Commit creado: chore: bump version to $next")
+        println("✅ Commit creado: Version $next 🎉")
         println()
     }
 }
