@@ -1,4 +1,5 @@
-DC      := docker compose
+DOCKER_GID := $(shell stat -c '%g' /var/run/docker.sock)
+DC := DOCKER_GID=$(DOCKER_GID) docker compose
 SERVICE := backend
 
 RESET   := \033[0m

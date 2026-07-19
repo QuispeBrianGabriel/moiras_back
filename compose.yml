@@ -24,6 +24,9 @@ services:
       - gradle_cache:/gradle-cache
       - ~/.gitconfig:/gitconfig-host:ro
       - ~/.ssh:/home/node/.ssh:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    group_add:
+      - "${DOCKER_GID}"
 
   db:
     image: postgres:17-alpine
