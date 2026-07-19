@@ -7,10 +7,11 @@ tasks.register("version") {
 
     doLast {
 
-        val type = findProperty("type")?.toString()
-            ?: throw GradleException(
-                "Uso: ./gradlew version -Ptype=patch|minor|major"
-            )
+        val type =
+            findProperty("type")?.toString()
+                ?: throw GradleException(
+                    "Uso: ./gradlew version -Ptype=patch|minor|major",
+                )
 
         val file = file("gradle.properties")
 
@@ -26,10 +27,11 @@ tasks.register("version") {
 
         val clean = current.removeSuffix("-SNAPSHOT")
 
-        val numbers = clean
-            .split(".")
-            .map { it.toInt() }
-            .toMutableList()
+        val numbers =
+            clean
+                .split(".")
+                .map { it.toInt() }
+                .toMutableList()
 
         when (type) {
 
@@ -48,13 +50,14 @@ tasks.register("version") {
                 numbers[2] = 0
             }
 
-            else ->
+            else -> {
                 throw GradleException("Tipo inválido: $type")
+            }
         }
 
         val next =
             numbers.joinToString(".") +
-                    if (snapshot) "-SNAPSHOT" else ""
+                if (snapshot) "-SNAPSHOT" else ""
 
         properties["version"] = next
 
@@ -67,17 +70,18 @@ tasks.register("version") {
         println()
 
         fun runCommand(vararg command: String) {
-            val process = ProcessBuilder(*command)
-                .directory(file.parentFile)
-                .redirectErrorStream(true)
-                .start()
+            val process =
+                ProcessBuilder(*command)
+                    .directory(file.parentFile)
+                    .redirectErrorStream(true)
+                    .start()
 
             val output = process.inputStream.bufferedReader().readText()
             val exitCode = process.waitFor()
 
             if (exitCode != 0) {
                 throw GradleException(
-                    "Comando falló (${command.joinToString(" ")}):\n$output"
+                    "Comando falló (${command.joinToString(" ")}):\n$output",
                 )
             }
         }
