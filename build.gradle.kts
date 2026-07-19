@@ -84,9 +84,15 @@ contracts {
 
 spotless {
     java {
+        target(
+            "src/main/java/**/*.java",
+            "src/test/java/**/*.java",
+        )
         googleJavaFormat()
         removeUnusedImports()
         formatAnnotations()
+        trimTrailingWhitespace()
+        endWithNewline()
     }
     kotlinGradle {
         target("*.gradle.kts", "gradle/*.gradle.kts")
