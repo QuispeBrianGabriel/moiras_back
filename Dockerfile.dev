@@ -1,5 +1,8 @@
 FROM eclipse-temurin:25-jdk
+RUN apt-get update && apt-get install -y --no-install-recommends git
+RUN rm -rf /var/lib/apt/lists/*
+ENV GRADLE_USER_HOME=/gradle-cache
+RUN mkdir -p /gradle-cache && chmod 777 /gradle-cache
 WORKDIR /app
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 RUN git config --system --add safe.directory /app
 EXPOSE 8080
