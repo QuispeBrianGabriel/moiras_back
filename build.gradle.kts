@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
 	java
 	id("org.springframework.boot") version "4.1.0"
@@ -11,7 +9,7 @@ plugins {
 }
 
 group = "com.moiras"
-version = property("version")
+version = property("version") as String
 
 java {
 	toolchain {
@@ -104,70 +102,4 @@ tasks.named("bootRun") {
 	outputs.upToDateWhen { false }
 }
 
-tasks.register("version") {
-
-    group = "versioning"
-    description = "Incrementa la versión."
-
-    doLast {
-
-        val type = findProperty("type")?.toString()
-            ?: throw GradleException(
-                "Uso: ./gradlew version -Ptype=patch|minor|major"
-            )
-
-        val file = file("gradle.properties")
-
-        val properties = Properties()
-
-        file.inputStream().use {
-            properties.load(it)
-        }
-
-        val current = properties.getProperty("version")
-
-        val snapshot = current.endsWith("-SNAPSHOT")
-
-        val clean = current.removeSuffix("-SNAPSHOT")
-
-        val numbers = clean
-            .split(".")
-            .map { it.toInt() }
-            .toMutableList()
-
-        when (type) {
-
-            "patch" -> {
-                numbers[2]++
-            }
-
-            "minor" -> {
-                numbers[1]++
-                numbers[2] = 0
-            }
-
-            "major" -> {
-                numbers[0]++
-                numbers[1] = 0
-                numbers[2] = 0
-            }
-
-            else ->
-                throw GradleException("Tipo inválido: $type")
-        }
-
-        val next =
-            numbers.joinToString(".") +
-                    if (snapshot) "-SNAPSHOT" else ""
-
-        properties["version"] = next
-
-        file.outputStream().use {
-            properties.store(it, null)
-        }
-
-        println()
-        println("Versión: $current → $next")
-        println()
-    }
-}
+apply(from = "gradle/version.gradle.kts")
