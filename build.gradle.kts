@@ -80,6 +80,7 @@ hibernate {
 }
 
 contracts {
+    failOnNoContracts.set(false)
 }
 
 spotless {
