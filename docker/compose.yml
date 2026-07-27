@@ -1,0 +1,12 @@
+services:
+  backend:
+    container_name: moiras_back
+    stdin_open: true
+    tty: true
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ..:/app
